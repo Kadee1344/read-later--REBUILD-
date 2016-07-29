@@ -14,7 +14,11 @@ export class HeaderComponent {
   constructor(private authService: AuthService) { }
 
   isAuth() {
-    return
+    return this.authService.isAuthenticated();
+  }
+
+  onLogout() {
+    this.authService.logout();
   }
 
 }
