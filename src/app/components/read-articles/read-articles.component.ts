@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES } from '@angular/forms';
-import { Http, Headers } from '@angular/http';
 import 'rxjs/Rx';
 
-import { DataService } from '../../services/data.service.ts';
+import { DataService } from '../../services/data.service';
 import { Filter } from '../../pipes/filter.pipe';
 
 
@@ -32,8 +31,55 @@ export class ReadArticlesComponent implements OnInit {
 
   ngOnInit() {
     this.myForm = this._fb.group({
-      title: ['']
-    })
+      title: ['', Validators.required],
+      content: ['', Validators.required],
+      url: ['', Validators.required]
+    });
+    this.onGetData();
+  }
+
+  onGetData() {
+    this._dataService.getAllData()
+      .subscribe(
+        data => {
+          const myArray = [];
+          for (let key in data) {
+            if (data[key].title != '') {
+              data[key].id = key;
+              myArray.push(data[key]);
+            }
+          }
+          this.items = myArray;
+        }
+      );
+  }
+
+  onDelete(id) {
+    this._dataService.deleteData(id)
+      .subscribe(
+        () => this.onGetData(),
+        error => console.error(error)
+      );
+  }
+
+  onSaveData() {
+    this._dataService.addData(this.myForm.value)
+      .subscribe(
+        () => this.onGetData(),
+        error => console.error(error)
+      );
+  }
+
+  onClose() {
+    this.artSelect = false;
+  }
+
+  articleMore(title, content, url) {
+    this.articleTitle = title;
+    this.articleContent = content;
+    this.articleUrl = url;
+    this.artSelect = true;
+    this.artSelect = true;
   }
 
 }

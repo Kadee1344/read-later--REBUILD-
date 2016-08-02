@@ -9,7 +9,7 @@ export const APP_ROUTES = [
   provideRouter([
     { path: '', redirectTo:'/signup', pathMatch: 'full' },
     { path: 'signup', component: SignupComponent },
-    { path: 'signip', component: SigninComponent },
-    { path: 'read', component: ReadArticlesComponent },
+    { path: 'signin', component: SigninComponent },
+    { path: 'read', component: ReadArticlesComponent, canActivate: [AuthGuard] }
   ])
 ];
